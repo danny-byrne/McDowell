@@ -84,6 +84,85 @@ const compressString = (string) => {
   return result.length > string.length ? string : result;
 };
 
+const rotateMatrix = (matrix, n) => {
+  for (let layer = 0; layer < n / 2; layer++) {
+    let first = layer;
+    let last = n - 1 - layer;
+    for (let i = first; i < last; i++) {
+      let offset = i - first;
+      let top = matrix[first][i];
+      matrix[first][i] = matrix[last - offset][first];
+      matrix[last - offset][first] = matrix[last][last - offset];
+      matrix[last][last - offset] = matrix[i][last];
+      matrix[i][last] = top;
+    }
+  }
+  return matrix;
+};
+
+//if an element in a mxn matrix is 0, it's entire row and column are set to zero
+const zeroMatrix = (matrix) => {
+  const rows = new Array(matrix.length).fill(false);
+  const cols = new Array(matrix[0].length).fill(false);
+  for (let row = 0; row < matrix.length; row++) {
+    for (let col = 0; col < matrix[0].length; col++) {
+      if (matrix[row][col] == 0) {
+        rows[row] = true;
+        cols[col] = true;
+      }
+    }
+  }
+  newMatrix = [...matrix];
+
+  for (let i = 0; i < rows.length; i++) {
+    if (rows[i]) {
+      nullifyRow(matrix, i);
+    }
+  }
+
+  for (let i = 0; i < cols.length; i++) {
+    if (cols[i]) {
+      nullifyCol(matrix, i);
+    }
+  }
+
+  function nullifyRow(matrix, row) {
+    for (let col = 0; col < matrix[0].length; col++) {
+      matrix[row][col] = 0;
+    }
+  }
+
+  function nullifyCol(matrix, col) {
+    for (let row = 0; row < matrix.length; row++) {
+      matrix[row][col] = 0;
+    }
+  }
+
+  return matrix;
+};
+
+const stringRotation = (s1, s2) => {
+  if (!s1.length || !s2.length) return false;
+  if (s1.length != s2.length) return false;
+  s1 = s1.toLowerCase();
+  s2 = s2.toLowerCase();
+  let count = 0;
+  while (count < s1.length) {
+    s1 = s1.split("");
+    s1.push(s1.shift());
+    s1 = s1.join("");
+    if (s1 == s2) {
+      return true;
+    }
+    count++;
+  }
+  return false;
+};
+
+console.log(stringRotation("hello", "elloh"));
+
+const isSubstring = () => {};
+
 module.exports = {
   isUnique,
   checkPermutation,
@@ -91,4 +170,7 @@ module.exports = {
   palinPerm,
   oneAway,
   compressString,
+  rotateMatrix,
+  zeroMatrix,
+  stringRotation,
 };
